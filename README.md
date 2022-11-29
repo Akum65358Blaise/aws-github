@@ -1,74 +1,153 @@
-<<<<<<< HEAD
-# aws-github
-=======
-# Getting Started with Create React App
+#Deploy React Application to AWS Using Github Actions
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A lab on how to deploy a React Application to AWS using Github Actions.
 
-## Available Scripts
+Create React Project
+First let’s create react project locally. We are going to use CRA for this. Use below command to create a react project.
 
-In the project directory, you can run:
+npx create-react-app aws-github
 
-### `npm start`
+##Create GitHub Project
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Now that we have our project already created locally, it is time to create a new project on our GitHub. Login to your GitHub account and create a new project.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Click on New repository
 
-### `npm test`
+At Repository name give name aws-github and scroll down all the way to bottom and click on Create repository button.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+As we already created a new project locally. Simply grab below command
 
-### `npm run build`
+git remote add origin git@github.com:Akum65358Blaise/aws-github.git
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+and follow below steps.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+> cd aws-github
+> rm -rf .git
+> git init
+> git remote add origin git@github.com:zafar-saleem/aws-github.git
 
-### `npm run eject`
+In the first line, we are cd into the root folder of our project locally. Then we get rid of the .git folder and initialise the parent folder as a new and fresh repository. Finally, the command we grabbed in previous step paste it here and run it which will add our GitHub repo as origin to our local repository.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+##Get AWS Keys
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Time for get credentials from our AWS console. Login to your AWS console and click on your username at the top right corner of the screen as shown below. Then click on Security Credentials.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+##Adding Credentials to GitHub Repository
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Since we already have the credentials from AWS let’s finish this step off by adding them to our GitHub repository. Go to security tab on your GitHub aws-github repository.
 
-## Learn More
+Then click on Secrets and then Actions. Then click on New Repository Secret.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Add your Access Key which you downloaded from AWS in previous step here.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Click on New Repository secret again and this time add Secret Access Key.
 
-### Code Splitting
+Finally add key for production environment by following the same procedure i.e. clicking on New Repository secret.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+We have to create above aws-github-prod S3 bucket next in our AWS console.
 
-### Analyzing the Bundle Size
+##Creating and Setting Up AWS S3 Bucket
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Now that we have GitHub setup, we need to have an S3 bucket where we will deploy our react application. The name of this bucket must match the Secret we added to GitHub above which is aws-github-prod.
 
-### Making a Progressive Web App
+Open your AWS console and click on S3.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Click on Create bucket.
 
-### Advanced Configuration
+Once you land on below page enter the name of the bucket as aws-github-prod.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Scroll down and uncheck Block all public access and check your acknowledgement.
 
-### Deployment
+Now scroll all the way down and click on Create bucket button.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+You should be able to view the newly created bucket now.
 
-### `npm run build` fails to minify
+##Create Bucket Policy
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
->>>>>>> 88ebade (cicd pipeline to deploy to s3)
+Click on your bucket name from the list of S3 home page i.e. aws-github-prod. On the next page click on permissions.
+
+Scroll down to bucket policy section and click on Edit.
+
+Paste below contents and click on Save changes.
+
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "PublicReadGetObject",
+            "Effect": "Allow",
+            "Principal": "*",
+            "Action": "s3:GetObject",
+            "Resource": "arn:aws:s3:::aws-github-prod/*"
+        }
+    ]
+}
+
+Next click on Properties on your aws-github-prod S3 bucket page.
+
+Scroll down to the bottom to the static website hosting. Click on Edit.
+
+Under static website hosting check Enable.
+
+Scroll down and enter enter index.html value to Index Document and to Error Document. Then click on Save changes button at the bottom of below page where you have to scroll to the bottom.
+
+GitHub Actions Workflows
+Time for the real part of this article where we will write YAML file. Create .github folder at the root of your project. Inside that create workflows folder then create production.yml file as below.
+
+mkdir .github
+cd .github
+mkdir workflows
+cd workflows
+touch production.yml
+
+Open production.yml file and paste below code.
+
+name: Production Build
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [17.x]
+        
+    steps:
+    - uses: actions/checkout@v1
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Yarn Install
+      run: |
+        yarn install
+    - name: Development Build
+      run: |
+        yarn build
+    - name: Deploy to S3
+      uses: jakejarvis/s3-sync-action@master
+      env:
+        AWS_S3_BUCKET: ${{ secrets.AWS_PROD_BUCKET_NAME }}
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        SOURCE_DIR: "build"
+
+
+The above job is going to run when we make a git push to master branch. Node 17 is the version to use. Finally it will follow the steps under the steps area where it will install dependencies, build for production and finally deploy it to aws-github-prod S3 bucket.
+
+Let’s give it a try if it is working. Stage, commit and push your changes to master branch.
+
+-git add -A
+-git commit -m "initial commit"
+-git push origin master
+
+Now that our react application is successfully deployed it is time to run. Go to your S3 Bucket home on AWS and click Properties and scroll to the bottom where you should be able to view a link, click it and you should be able to see your react application live.
+
+
+
+
+
