@@ -23,9 +23,12 @@ and follow below steps.
 
 
 > cd aws-github
+
 > rm -rf .git
+
 > git init
-> git remote add origin git@github.com:zafar-saleem/aws-github.git
+
+> git remote add origin git@github.com:Akum65358Blaise/aws-github.git
 
 In the first line, we are cd into the root folder of our project locally. Then we get rid of the .git folder and initialise the parent folder as a new and fresh repository. Finally, the command we grabbed in previous step paste it here and run it which will add our GitHub repo as origin to our local repository.
 
@@ -73,12 +76,18 @@ Paste below contents and click on Save changes.
 
 {
     "Version": "2012-10-17",
+
     "Statement": [
+
         {
             "Sid": "PublicReadGetObject",
+
             "Effect": "Allow",
+
             "Principal": "*",
+
             "Action": "s3:GetObject",
+
             "Resource": "arn:aws:s3:::aws-github-prod/*"
         }
     ]
@@ -96,10 +105,15 @@ GitHub Actions Workflows
 Time for the real part of this article where we will write YAML file. Create .github folder at the root of your project. Inside that create workflows folder then create production.yml file as below.
 
 mkdir .github
+
 cd .github
+
 mkdir workflows
+
 cd workflows
+
 touch production.yml
+
 
 Open production.yml file and paste below code.
 
@@ -142,7 +156,9 @@ The above job is going to run when we make a git push to master branch. Node 17 
 Let’s give it a try if it is working. Stage, commit and push your changes to master branch.
 
 -git add -A
+
 -git commit -m "initial commit"
+
 -git push origin master
 
 Now that our react application is successfully deployed it is time to run. Go to your S3 Bucket home on AWS and click Properties and scroll to the bottom where you should be able to view a link, click it and you should be able to see your react application live.
