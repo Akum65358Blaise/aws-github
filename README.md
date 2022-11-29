@@ -1,6 +1,6 @@
-Deploy React Application to AWS Using Github Actions
+Deploy React Application to AWS Using Github Actions CI/CD PIPELINE
 
-A lab on how to deploy a React Application to AWS using Github Actions.
+A lab on how to deploy a React Application to AWS using Github Actions CI/CD PIPELINE.
 
 Create React Project
 First let’s create react project locally. We are going to use CRA for this. Use below command to create a react project.
