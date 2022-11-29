@@ -1,4 +1,4 @@
-#Deploy React Application to AWS Using Github Actions
+Deploy React Application to AWS Using Github Actions
 
 A lab on how to deploy a React Application to AWS using Github Actions.
 
@@ -7,7 +7,7 @@ First let’s create react project locally. We are going to use CRA for this. Us
 
 npx create-react-app aws-github
 
-##Create GitHub Project
+Create GitHub Project
 
 Now that we have our project already created locally, it is time to create a new project on our GitHub. Login to your GitHub account and create a new project.
 
@@ -36,7 +36,7 @@ In the first line, we are cd into the root folder of our project locally. Then w
 
 Time for get credentials from our AWS console. Login to your AWS console and click on your username at the top right corner of the screen as shown below. Then click on Security Credentials.
 
-##Adding Credentials to GitHub Repository
+Adding Credentials to GitHub Repository
 
 Since we already have the credentials from AWS let’s finish this step off by adding them to our GitHub repository. Go to security tab on your GitHub aws-github repository.
 
@@ -50,7 +50,7 @@ Finally add key for production environment by following the same procedure i.e. 
 
 We have to create above aws-github-prod S3 bucket next in our AWS console.
 
-##Creating and Setting Up AWS S3 Bucket
+Creating and Setting Up AWS S3 Bucket
 
 Now that we have GitHub setup, we need to have an S3 bucket where we will deploy our react application. The name of this bucket must match the Secret we added to GitHub above which is aws-github-prod.
 
